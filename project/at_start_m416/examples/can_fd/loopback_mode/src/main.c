@@ -63,21 +63,25 @@
 static void can_gpio_config(void)
 {
   gpio_init_type gpio_init_struct;
+
   /* enable the gpio clock */
   crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
 
   gpio_default_para_init(&gpio_init_struct);
 
-  /* configure the can tx, rx pin */
+  /* configure the can tx, rx, stb pin */
+  /* can_stb connect to the transceiver <stby> pin, default output low, keep the transceiver 
+     running in normal mode */   
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
-  gpio_init_struct.gpio_pins = GPIO_PINS_9 | GPIO_PINS_8;
+  gpio_init_struct.gpio_pins = GPIO_PINS_9 | GPIO_PINS_8 | GPIO_PINS_7;
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init(GPIOB, &gpio_init_struct);
 
   gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE9, GPIO_MUX_9);
   gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE8, GPIO_MUX_9);
+  gpio_pin_mux_config(GPIOB, GPIO_PINS_SOURCE7, GPIO_MUX_9);
 }
 
 /**

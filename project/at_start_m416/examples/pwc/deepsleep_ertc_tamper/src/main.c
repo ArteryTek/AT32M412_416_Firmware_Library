@@ -182,6 +182,13 @@ int main(void)
 
     /* turn on the led light */
     at32_led_on(LED2);
+    
+    /* determine if the debugging function is enabled */
+    if((DEBUGMCU->ctrl & 0x00000007) != 0x00000000)
+    {
+      /* wait 3 LICK cycles to ensure clock stable */
+      delay_us(6);
+    }
 
     /* resume ldo before system clock source enhance */
     pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);

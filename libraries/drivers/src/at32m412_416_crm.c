@@ -679,7 +679,6 @@ void crm_hick_sclk_frequency_select(crm_hick_sclk_frequency_type value)
   }
 
   CRM->misc1_bit.hick_to_sclk = TRUE;
-  CRM->misc1_bit.hickdiv = CRM_HICK48_NODIV;
   CRM->misc1_bit.hick_to_sclk = value;
   crm_hick_sclk_div_set((crm_hick_sclk_div_type)temp_div);
 }
@@ -720,10 +719,6 @@ void crm_pll_config(crm_pll_clock_source_type clock_source, uint16_t pll_ns, \
                     uint16_t pll_ms, crm_pll_fr_type pll_fr)
 {
   /* config pll clock source */
-  if(clock_source == CRM_PLL_SOURCE_HICK)
-  {
-    CRM->misc1_bit.hickdiv = CRM_HICK48_NODIV;
-  }
   CRM->pllcfg_bit.pllrcs = clock_source;
 
   /* config pll multiplication factor */
@@ -789,7 +784,7 @@ void crm_clocks_freq_get(crm_clocks_freq_type *clocks_struct)
   switch(sclk_source)
   {
     case CRM_SCLK_HICK:
-      if(((CRM->misc1_bit.hick_to_sclk) != RESET) && ((CRM->misc1_bit.hickdiv) != RESET))
+      if((CRM->misc1_bit.hick_to_sclk) != RESET)
         clocks_struct->sclk_freq = HICK_VALUE * 6;
       else
         clocks_struct->sclk_freq = HICK_VALUE;

@@ -63,6 +63,8 @@ static void can_gpio_config(void)
   gpio_default_para_init(&gpio_init_struct);
 
   /* configure the can tx, rx, stb pin */
+  /* can_stb connect to the transceiver <stby> pin, default output low, keep the transceiver 
+     running in normal mode */   
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;

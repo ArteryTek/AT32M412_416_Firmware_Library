@@ -27,7 +27,7 @@
 		<link>
 			<name>bsp/at32m412_416_board.c</name>
 			<type>1</type>
-			<location>D:/worksrc/BSPs_PACKs/AT32M412_416_Firmware_Library_V2.x.x/project/at32m412_416_board/at32m412_416_board.c</location>
+			<locationURI>PARENT-3-PROJECT_LOC/project/at32m412_416_board/at32m412_416_board.c</locationURI>
 		</link>
 		<link>
 			<name>cmsis/startup_at32m412_416.s</name>

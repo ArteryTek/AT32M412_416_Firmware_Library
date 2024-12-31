@@ -27,21 +27,9 @@
 
 #include "i2c_application.h"
 
-/** @defgroup EEPROM_basic_parameter
-  * @{
-  */
-  
 #define EEPROM_BUSY_TIMEOUT              1000 /*!< eeprom busy waiting timeout */
 #define EEPROM_PAGE_SIZE                 8    /*!< eeprom page size */
 #define EEPROM_I2C_ADDRESS               0xA0 /*!< eeprom i2c address */
-
-/**
-  * @}
-  */
-
-/** @defgroup EEPROM_transmission_mode
-  * @{
-  */
 
 typedef enum
 {
@@ -49,10 +37,6 @@ typedef enum
   EE_MODE_INT                            = 0x02, /*!< interrupt communication */
   EE_MODE_DMA                            = 0x03, /*!< dma communication */
 } eeprom_mode_type;
-
-/**
-  * @}
-  */
 
 i2c_status_type eeprom_write_buffer(i2c_handle_type* hi2c, eeprom_mode_type mode, i2c_mem_address_width_type mem_address_width, uint16_t address, uint16_t mem_address, uint8_t* pdata, uint16_t size, uint32_t timeout);
 i2c_status_type eeprom_read_buffer (i2c_handle_type* hi2c, eeprom_mode_type mode, i2c_mem_address_width_type mem_address_width, uint16_t address, uint16_t mem_address, uint8_t* pdata, uint16_t size, uint32_t timeout);

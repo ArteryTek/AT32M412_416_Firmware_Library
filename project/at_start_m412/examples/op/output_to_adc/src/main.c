@@ -122,13 +122,13 @@ int main(void)
   for(index=0; index<=0x1f; index++)
   {
     op_set_triming_value(OP2, OP_TRIMMING_PMOS, index);
-	/* must delay 1ms for calibration */
+    /* must delay 1ms for calibration */
     delay_ms(1);
     adc_ordinary_software_trigger_enable(ADC1, TRUE);
     while(!adc_flag_get(ADC1, ADC_OCCE_FLAG));
     adc_data = adc_ordinary_conversion_data_get(ADC1);
-    /* calibration is successful when adc conversion data is 0 */		
-    if(adc_data==0)
+    /* calibration is successful when adc conversion data is close to the minimum adc output */		
+    if(adc_data<64)
     {
       cal_flag=1;
 		   	printf("pmos calibration ok.\r\n");
@@ -145,13 +145,13 @@ int main(void)
   for(index=0; index<=0x1f; index++)
   {
     op_set_triming_value(OP2, OP_TRIMMING_NMOS, index);
-	/* must delay 1ms for calibration */
+    /* must delay 1ms for calibration */
     delay_ms(1);
 	  	adc_ordinary_software_trigger_enable(ADC1, TRUE);
     while(!adc_flag_get(ADC1, ADC_OCCE_FLAG));
     adc_data = adc_ordinary_conversion_data_get(ADC1);
-    /* calibration is successful when adc conversion data is 0 */		
-    if(adc_data==0)
+    /* calibration is successful when adc conversion data is close to the minimum adc output */			
+    if(adc_data<64)
     {
       cal_flag=1;
       printf("nmos calibration ok.\r\n");

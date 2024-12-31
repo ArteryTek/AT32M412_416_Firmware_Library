@@ -371,15 +371,6 @@ typedef enum
 } crm_ertc_clock_type;
 
 /**
-  * @brief crm hick 48mhz division
-  */
-typedef enum
-{
-  CRM_HICK48_DIV6                        = 0x00, /*!< fixed 8 mhz when hick is selected as sclk */
-  CRM_HICK48_NODIV                       = 0x01  /*!< 8 mhz or 48 mhz depend on hickdiv when hick is selected as sclk */
-} crm_hick_div_6_type;
-
-/**
   * @brief crm sclk select
   */
 typedef enum
@@ -930,8 +921,7 @@ typedef struct
     struct
     {
       __IO uint32_t hickcal_key          : 8; /* [7:0] */
-      __IO uint32_t reserved1            : 4; /* [11:8] */
-      __IO uint32_t hickdiv              : 1; /* [12] */
+      __IO uint32_t reserved1            : 5; /* [12:8] */
       __IO uint32_t reserved2            : 1; /* [13] */
       __IO uint32_t hick_to_sclk         : 1; /* [14] */
       __IO uint32_t reserved3            : 1; /* [15] */

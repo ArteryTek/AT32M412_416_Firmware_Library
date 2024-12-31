@@ -1,6 +1,6 @@
 /**
   **************************************************************************
-  * @file     at32m412_416_board.c
+  * @file     at32m412_416_board.h
   * @brief    header file for at-start board. set of firmware functions to
   *           manage leds and push-button. initialize delay function.
   **************************************************************************

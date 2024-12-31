@@ -242,7 +242,7 @@ void op_channel_config(uint16_t channel)
       default:break;
     }
     dma_trans_complete_flag = 0;
-    if(data==0)
+    if(data<64)
     {
       /*calibration is successful when calout switches from 1 to 0.*/
       printf("PMOS Calibration OK\r\n");
@@ -281,7 +281,7 @@ void op_channel_config(uint16_t channel)
       break;
       default:break;
     }
-    while(data==0)
+    while(data<64)
     {
       printf("NMOS Calibration OK\r\n");
       op_enable(opa_channel_sel, FALSE);

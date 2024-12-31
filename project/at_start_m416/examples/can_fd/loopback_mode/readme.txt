@@ -11,6 +11,7 @@
   set-up
   - can_tx(pb9)
   - can_rx(pb8)
+  - can_stb(pb7)
 
   for more detailed information. please refer to the application note document AN0232.
 
