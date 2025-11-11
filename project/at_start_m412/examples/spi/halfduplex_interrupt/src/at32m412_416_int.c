@@ -3,7 +3,8 @@
   * @file     at32m412_416_int.c
   * @brief    main interrupt service routines.
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -32,13 +33,6 @@
 /** @addtogroup 412_SPI_halfduplex_interrupt
   * @{
   */
-
-#define BUFFERSIZE 32
-
-extern uint8_t spi1_buffer_tx[BUFFERSIZE];
-extern uint8_t spi2_buffer_rx[BUFFERSIZE];
-extern uint32_t tx_index;
-extern uint32_t rx_index;
 
 /**
   * @brief  this function handles nmi exception.
@@ -135,36 +129,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  This function handles the spi1 interrupt request.
-  * @param  None
-  * @retval None
-  */
- void SPI1_IRQHandler(void)
-{
-  if(spi_i2s_interrupt_flag_get(SPI1, SPI_I2S_TDBE_FLAG) != RESET)
-  {
-    spi_i2s_data_transmit(SPI1, spi1_buffer_tx[tx_index++]);
-    if(tx_index == BUFFERSIZE)
-    {
-      spi_i2s_interrupt_enable(SPI1, SPI_I2S_TDBE_INT, FALSE);
-    }
-  }
-}
-
-/**
-  * @brief  This function handles the spi2 interrupt request.
-  * @param  None
-  * @retval None
-  */
- void SPI2_IRQHandler(void)
-{
-  if(spi_i2s_interrupt_flag_get(SPI2, SPI_I2S_RDBF_FLAG) != RESET)
-  {
-    spi2_buffer_rx[rx_index++] = spi_i2s_data_receive(SPI2);
-  }
 }
 
 /**

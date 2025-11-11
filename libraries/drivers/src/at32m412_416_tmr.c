@@ -3,7 +3,8 @@
   * @file     at32m412_416_tmr.c
   * @brief    contains all the functions for the tmr firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -341,8 +342,10 @@ void tmr_output_channel_config(tmr_type *tmr_x, tmr_channel_select_type tmr_chan
   switch(channel)
   {
     case TMR_SELECT_CHANNEL_1:
+      tmr_x->cctrl_bit.c1en = FALSE;
       tmr_x->ctrl2_bit.c1ios = tmr_output_struct->oc_idle_state;
       tmr_x->ctrl2_bit.c1cios = tmr_output_struct->occ_idle_state;
+      tmr_x->cm1_output_bit.c1c = FALSE;
       tmr_x->cm1_output_bit.c1octrl = cxoctrl_bit2_0;
       tmr_x->cm1_output_bit.c1octrl_3 = cxoctrl_bit3;    
       tmr_x->cctrl_bit.c1p = tmr_output_struct->oc_polarity;
@@ -352,8 +355,10 @@ void tmr_output_channel_config(tmr_type *tmr_x, tmr_channel_select_type tmr_chan
       break;
 
     case TMR_SELECT_CHANNEL_2:
+      tmr_x->cctrl_bit.c2en = FALSE;
       tmr_x->ctrl2_bit.c2ios = tmr_output_struct->oc_idle_state;
       tmr_x->ctrl2_bit.c2cios = tmr_output_struct->occ_idle_state;
+      tmr_x->cm1_output_bit.c2c = FALSE;
       tmr_x->cm1_output_bit.c2octrl = cxoctrl_bit2_0;
       tmr_x->cm1_output_bit.c2octrl_3 = cxoctrl_bit3;
       tmr_x->cctrl_bit.c2p = tmr_output_struct->oc_polarity;
@@ -363,8 +368,10 @@ void tmr_output_channel_config(tmr_type *tmr_x, tmr_channel_select_type tmr_chan
       break;
 
     case TMR_SELECT_CHANNEL_3:
+      tmr_x->cctrl_bit.c3en = FALSE;
       tmr_x->ctrl2_bit.c3ios = tmr_output_struct->oc_idle_state;
       tmr_x->ctrl2_bit.c3cios = tmr_output_struct->occ_idle_state;
+      tmr_x->cm2_output_bit.c3c = FALSE;
       tmr_x->cm2_output_bit.c3octrl = cxoctrl_bit2_0;
       tmr_x->cm2_output_bit.c3octrl_3 = cxoctrl_bit3;
       tmr_x->cctrl_bit.c3p = tmr_output_struct->oc_polarity;
@@ -374,7 +381,9 @@ void tmr_output_channel_config(tmr_type *tmr_x, tmr_channel_select_type tmr_chan
       break;
 
     case TMR_SELECT_CHANNEL_4:
+      tmr_x->cctrl_bit.c4en = FALSE;
       tmr_x->ctrl2_bit.c4ios = tmr_output_struct->oc_idle_state;
+      tmr_x->cm2_output_bit.c4c = FALSE;
       tmr_x->cm2_output_bit.c4octrl = cxoctrl_bit2_0;
       tmr_x->cm2_output_bit.c4octrl_3 = cxoctrl_bit3;
       tmr_x->cctrl_bit.c4p = tmr_output_struct->oc_polarity;
@@ -903,6 +912,7 @@ void tmr_input_channel_init(tmr_type *tmr_x, tmr_input_config_type *input_struct
   switch(channel)
   {
     case TMR_SELECT_CHANNEL_1:
+      tmr_x->cctrl_bit.c1en       = FALSE;
       tmr_x->cctrl_bit.c1p        = (uint32_t)input_struct->input_polarity_select;
       tmr_x->cctrl_bit.c1cp       = (input_struct->input_polarity_select & 0x2) >> 1;
       tmr_x->cm1_input_bit.c1c    = input_struct->input_mapped_select;
@@ -912,6 +922,7 @@ void tmr_input_channel_init(tmr_type *tmr_x, tmr_input_config_type *input_struct
       break;
 
     case TMR_SELECT_CHANNEL_2:
+      tmr_x->cctrl_bit.c2en       = FALSE;
       tmr_x->cctrl_bit.c2p        = (uint32_t)input_struct->input_polarity_select;
       tmr_x->cctrl_bit.c2cp       = (input_struct->input_polarity_select & 0x2) >> 1;
       tmr_x->cm1_input_bit.c2c    = input_struct->input_mapped_select;
@@ -921,6 +932,7 @@ void tmr_input_channel_init(tmr_type *tmr_x, tmr_input_config_type *input_struct
       break;
 
     case TMR_SELECT_CHANNEL_3:
+      tmr_x->cctrl_bit.c3en       = FALSE;
       tmr_x->cctrl_bit.c3p        = (uint32_t)input_struct->input_polarity_select;
       tmr_x->cctrl_bit.c3cp       = (input_struct->input_polarity_select & 0x2) >> 1;
       tmr_x->cm2_input_bit.c3c    = input_struct->input_mapped_select;
@@ -930,6 +942,7 @@ void tmr_input_channel_init(tmr_type *tmr_x, tmr_input_config_type *input_struct
       break;
 
     case TMR_SELECT_CHANNEL_4:
+      tmr_x->cctrl_bit.c4en       = FALSE;
       tmr_x->cctrl_bit.c4p        = (uint32_t)input_struct->input_polarity_select;
       tmr_x->cctrl_bit.c4cp       = (input_struct->input_polarity_select & 0x2) >> 1;
       tmr_x->cm2_input_bit.c4c    = input_struct->input_mapped_select;
@@ -1137,6 +1150,8 @@ void tmr_pwm_input_config(tmr_type *tmr_x, tmr_input_config_type *input_struct, 
   switch(channel)
   {
     case TMR_SELECT_CHANNEL_1:
+      tmr_x->cctrl_bit.c1en = FALSE;
+      tmr_x->cctrl_bit.c2en = FALSE;
       if(input_struct->input_polarity_select == TMR_INPUT_RISING_EDGE)
       {
         /* set channel polarity */
@@ -1180,6 +1195,8 @@ void tmr_pwm_input_config(tmr_type *tmr_x, tmr_input_config_type *input_struct, 
       break;
 
     case TMR_SELECT_CHANNEL_2:
+      tmr_x->cctrl_bit.c1en = FALSE;
+      tmr_x->cctrl_bit.c2en = FALSE;
       if(input_struct->input_polarity_select == TMR_INPUT_RISING_EDGE)
       {
         /* set channel polarity */
@@ -1502,19 +1519,34 @@ void tmr_interrupt_enable(tmr_type *tmr_x, uint32_t tmr_interrupt, confirm_state
   *         - TMR_HALL_FLAG
   *         - TMR_TRIGGER_FLAG
   *         - TMR_BRK_FLAG
+  *         - TMR_BRK2_FLAG
   * @retval state of tmr interrupt flag
   */
 flag_status tmr_interrupt_flag_get(tmr_type *tmr_x, uint32_t tmr_flag)
 {
   flag_status status = RESET;
-
-  if((tmr_x->ists & tmr_flag) && (tmr_x->iden & tmr_flag))
+  
+  if(tmr_flag == TMR_BRK2_FLAG)
   {
-    status = SET;
+    if((tmr_x->ists & TMR_BRK2_FLAG) && (tmr_x->iden & TMR_BRK_FLAG))
+    {
+      status = SET;
+    }
+    else
+    {
+      status = RESET;
+    }
   }
   else
   {
-    status = RESET;
+    if((tmr_x->ists & tmr_flag) && (tmr_x->iden & tmr_flag))
+    {
+      status = SET;
+    }
+    else
+    {
+      status = RESET;
+    }
   }
 
   return status;
@@ -1832,6 +1864,9 @@ void tmr_encoder_mode_config(tmr_type *tmr_x, tmr_encoder_mode_type encoder_mode
                              ic1_polarity, tmr_input_polarity_type ic2_polarity)
 {
   tmr_x->stctrl_bit.smsel = encoder_mode;
+
+  tmr_x->cctrl_bit.c1en = FALSE;
+  tmr_x->cctrl_bit.c2en = FALSE;
 
   /* set ic1 polarity */
   tmr_x->cctrl_bit.c1p =  (ic1_polarity & 0x1);

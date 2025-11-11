@@ -1,9 +1,10 @@
 /**
   **************************************************************************
   * @file     at32m412_416_pwc.h
-  * @brief    at32m412_416 pwr header file
+  * @brief    at32m412_416 pwc header file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.

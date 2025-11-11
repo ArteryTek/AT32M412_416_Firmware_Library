@@ -3,7 +3,8 @@
   * @file     at32m412_416_adc.c
   * @brief    contains all the functions for the adc firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -164,9 +165,7 @@ void adc_common_default_para_init(adc_common_config_type *adc_common_struct)
   *         this parameter can be one of the following values:
   *         - ADC_INDEPENDENT_MODE                       - ADC_ORDINARY_SMLT_PREEMPT_SMLT_ONESLAVE_MODE   - ADC_ORDINARY_SMLT_PREEMPT_INTERLTRIG_ONESLAVE_MODE
   *         - ADC_PREEMPT_SMLT_ONLY_ONESLAVE_MODE        - ADC_ORDINARY_SMLT_ONLY_ONESLAVE_MODE           - ADC_ORDINARY_SHIFT_ONLY_ONESLAVE_MODE
-  *         - ADC_PREEMPT_INTERLTRIG_ONLY_ONESLAVE_MODE  - ADC_ORDINARY_SMLT_PREEMPT_SMLT_TWOSLAVE_MODE   - ADC_ORDINARY_SMLT_PREEMPT_INTERLTRIG_TWOSLAVE_MODE
-  *         - ADC_PREEMPT_SMLT_ONLY_TWOSLAVE_MODE        - ADC_ORDINARY_SMLT_ONLY_TWOSLAVE_MODE           - ADC_ORDINARY_SHIFT_ONLY_TWOSLAVE_MODE
-  *         - ADC_PREEMPT_INTERLTRIG_ONLY_TWOSLAVE_MODE
+  *         - ADC_PREEMPT_INTERLTRIG_ONLY_ONESLAVE_MODE
   * @param  div: configure the adc division.
   *         this parameter can be one of the following values:
   *         - ADC_HCLK_DIV_2             - ADC_HCLK_DIV_3             - ADC_HCLK_DIV_4             - ADC_HCLK_DIV_5
@@ -179,16 +178,14 @@ void adc_common_default_para_init(adc_common_config_type *adc_common_struct)
   *         - ADC_COMMON_DMAMODE_1 <mode 1 can be used: all ordinary simultaneous mode,all ordinary shifting mode>
   *         - ADC_COMMON_DMAMODE_2 <mode 2 can be used: one slaver ordinary simultaneous mode,all ordinary shifting mode>
   *         - ADC_COMMON_DMAMODE_3 <mode 3 can be used: one slaver ordinary simultaneous mode in 6/8 bit resolution,ordinary shifting mode in 6/8 bit resolution>
-  *         - ADC_COMMON_DMAMODE_4 <mode 4 can be used: two slaver ordinary simultaneous mode in 6/8 bit resolution,two slave ordinary shifting mode in 6/8 bit resolution>
-  *         - ADC_COMMON_DMAMODE_5 <mode 5 can be used: all two slaver ordinary simultaneous mode,all two slave ordinary shifting mode>
   * @param  common_dma_request_repeat_state: set the adc common dma request repeat state.
   *         this parameter can be:TRUE or FALSE
   * @param  sampling_interval: configure the ordinary shifting mode adjacent adc sampling interval.
   *         this parameter can be one of the following values:
-  *         - ADC_SAMPLING_INTERVAL_5CYCLES     - ADC_SAMPLING_INTERVAL_6CYCLES     - ADC_SAMPLING_INTERVAL_7CYCLES     - ADC_SAMPLING_INTERVAL_8CYCLES
-  *         - ADC_SAMPLING_INTERVAL_9CYCLES     - ADC_SAMPLING_INTERVAL_10CYCLES    - ADC_SAMPLING_INTERVAL_11CYCLES    - ADC_SAMPLING_INTERVAL_12CYCLES
-  *         - ADC_SAMPLING_INTERVAL_13CYCLES    - ADC_SAMPLING_INTERVAL_14CYCLES    - ADC_SAMPLING_INTERVAL_15CYCLES    - ADC_SAMPLING_INTERVAL_16CYCLES
-  *         - ADC_SAMPLING_INTERVAL_17CYCLES    - ADC_SAMPLING_INTERVAL_18CYCLES    - ADC_SAMPLING_INTERVAL_19CYCLES    - ADC_SAMPLING_INTERVAL_20CYCLES
+  *         - ADC_SAMPLING_INTERVAL_4CYCLES     - ADC_SAMPLING_INTERVAL_5CYCLES     - ADC_SAMPLING_INTERVAL_6CYCLES     - ADC_SAMPLING_INTERVAL_7CYCLES
+  *         - ADC_SAMPLING_INTERVAL_8CYCLES     - ADC_SAMPLING_INTERVAL_9CYCLES     - ADC_SAMPLING_INTERVAL_10CYCLES    - ADC_SAMPLING_INTERVAL_11CYCLES
+  *         - ADC_SAMPLING_INTERVAL_12CYCLES    - ADC_SAMPLING_INTERVAL_13CYCLES    - ADC_SAMPLING_INTERVAL_14CYCLES    - ADC_SAMPLING_INTERVAL_15CYCLES
+  *         - ADC_SAMPLING_INTERVAL_16CYCLES    - ADC_SAMPLING_INTERVAL_17CYCLES    - ADC_SAMPLING_INTERVAL_18CYCLES    - ADC_SAMPLING_INTERVAL_19CYCLES
   * @param  tempervintrv_state: set the adc temperature sensor and vintrv state.
   *         this parameter can be:TRUE or FALSE
   * @retval none
@@ -209,6 +206,29 @@ void adc_common_config(adc_common_config_type *adc_common_struct)
   ADCCOM->cctrl_bit.msdrcen = adc_common_struct->common_dma_request_repeat_state;
   ADCCOM->cctrl_bit.asisel = adc_common_struct->sampling_interval;
   ADCCOM->cctrl_bit.itsrven = adc_common_struct->tempervintrv_state;
+}
+
+/**
+  * @brief  adc combine mode set.
+  * @param  combine_mode: configure the adc combine mode.
+  *         this parameter can be one of the following values:
+  *         - ADC_INDEPENDENT_MODE                       - ADC_ORDINARY_SMLT_PREEMPT_SMLT_ONESLAVE_MODE   - ADC_ORDINARY_SMLT_PREEMPT_INTERLTRIG_ONESLAVE_MODE
+  *         - ADC_PREEMPT_SMLT_ONLY_ONESLAVE_MODE        - ADC_ORDINARY_SMLT_ONLY_ONESLAVE_MODE           - ADC_ORDINARY_SHIFT_ONLY_ONESLAVE_MODE
+  *         - ADC_PREEMPT_INTERLTRIG_ONLY_ONESLAVE_MODE
+  * @retval none
+  */
+void adc_combine_mode_set(adc_combine_mode_type combine_mode)
+{
+  ADCCOM->cctrl_bit.mssel = combine_mode;
+}
+
+/**
+  * @brief  get adc combine mode.
+  * @retval the new state of combine mode.
+  */
+uint32_t adc_combine_mode_get(void)
+{
+  return ADCCOM->cctrl_bit.mssel;
 }
 
 /**

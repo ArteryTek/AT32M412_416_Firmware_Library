@@ -13,4 +13,4 @@
   - adccom_ordinary_valuetab[n][1] ---> (adc2_channel_3<<8)  | adc1_channel_4
   - adccom_ordinary_valuetab[n][2] ---> (adc2_channel_5<<8)  | adc1_channel_6
 
-  for more detailed information. please refer to the application note document AN0180.
+  for more detailed information. please refer to the application note document AN0225.

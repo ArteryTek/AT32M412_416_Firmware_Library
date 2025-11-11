@@ -9,6 +9,7 @@
   halfduplex mode transfer data by interrupt mode.
   the pins connection as follow:
   - spi2 slaver              spi1 master
+    pb12(cs)        <--->     pa4(cs)
     pb13(sck)       <--->     pa5(sck)
     pb14(miso)      <--->     pa7(mosi)
 

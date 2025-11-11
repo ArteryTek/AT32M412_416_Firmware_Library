@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -33,14 +34,10 @@
   * @{
   */
 
-#define DMA_BUFFER_SIZE                  1
-
 __IO uint16_t adc1_ordinary_value = 0;
 __IO uint32_t adc1_overflow_flag = 0;
 __IO uint32_t adc1_conversion_fail_flag = 0;
-
-static void dma_config(void);
-static void adc_config(void);
+__IO uint32_t error_times_index = 0;
 
 /**
   * @brief  dma configuration.
@@ -55,7 +52,7 @@ static void dma_config(void)
 
   dma_reset(DMA1_CHANNEL1);
   dma_default_para_init(&dma_init_struct);
-  dma_init_struct.buffer_size = DMA_BUFFER_SIZE;
+  dma_init_struct.buffer_size = 1;
   dma_init_struct.direction = DMA_DIR_PERIPHERAL_TO_MEMORY;
   dma_init_struct.memory_base_addr = (uint32_t)&adc1_ordinary_value;
   dma_init_struct.memory_data_width = DMA_MEMORY_DATA_WIDTH_HALFWORD;
@@ -72,7 +69,6 @@ static void dma_config(void)
 
   /* disable dma transfer complete interrupt */
   dma_interrupt_enable(DMA1_CHANNEL1, DMA_FDT_INT, FALSE);
-  dma_channel_enable(DMA1_CHANNEL1, TRUE);
 }
 
 /**
@@ -85,6 +81,7 @@ static void adc_config(void)
   adc_common_config_type adc_common_struct;
   adc_base_config_type adc_base_struct;
   crm_periph_clock_enable(CRM_ADC1_PERIPH_CLOCK, TRUE);
+  adc_reset();
   nvic_irq_enable(ADC1_2_IRQn, 0, 0);
 
   adc_common_default_para_init(&adc_common_struct);
@@ -131,10 +128,10 @@ static void adc_config(void)
 
   /* enable adc overflow interrupt */
   adc_interrupt_enable(ADC1, ADC_OCCO_INT, TRUE);
-	
+
   /* enable adc trigger convert fail interrupt */
   adc_interrupt_enable(ADC1, ADC_TCF_INT, TRUE);
-	
+
   /* enable adc trigger conversion fail auto conversion abort */
   adc_convert_fail_auto_abort_enable(ADC1, TRUE);
 
@@ -147,6 +144,42 @@ static void adc_config(void)
   while(adc_calibration_init_status_get(ADC1));
   adc_calibration_start(ADC1);
   while(adc_calibration_status_get(ADC1));
+}
+
+/**
+  * @brief  this function handles adc1_2 handler.
+  * @param  none
+  * @retval none
+  */
+void ADC1_2_IRQHandler(void)
+{
+  if(adc_interrupt_flag_get(ADC1, ADC_TCF_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_TCF_FLAG);
+    adc1_conversion_fail_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_enable(ADC1, FALSE);
+    dma_channel_enable(DMA1_CHANNEL1, FALSE);
+    dma_flag_clear(DMA1_FDT1_FLAG);
+    dma_data_number_set(DMA1_CHANNEL1, 1);
+    dma_channel_enable(DMA1_CHANNEL1, TRUE);
+    adc_enable(ADC1, TRUE);
+  }
+
+  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
+    adc1_overflow_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_enable(ADC1, FALSE);
+    dma_channel_enable(DMA1_CHANNEL1, FALSE);
+    dma_flag_clear(DMA1_FDT1_FLAG);
+    dma_data_number_set(DMA1_CHANNEL1, 1);
+    dma_channel_enable(DMA1_CHANNEL1, TRUE);
+    adc_enable(ADC1, TRUE);
+  }
 }
 
 /**
@@ -169,23 +202,31 @@ int main(void)
   uart_print_init(115200);
   dma_config();
   adc_config();
-  printf("adc1_vref_check \r\n");
 
+  /* enable DMA after ADC activation */
+  dma_channel_enable(DMA1_CHANNEL1, TRUE);
+
+  printf("adc1_vref_check \r\n");
   while(1)
   {
     at32_led_toggle(LED2);
     delay_sec(1);
+
     /* adc1 software trigger start conversion */
     adc_ordinary_software_trigger_enable(ADC1, TRUE);
+
+    /* wait conversion end */
     while(dma_flag_get(DMA1_FDT1_FLAG) == RESET);
     dma_flag_clear(DMA1_FDT1_FLAG);
     printf("vref_value = %f V\r\n", ((double)1.2 * 4095) / adc1_ordinary_value);
-    if((adc1_overflow_flag != 0) || (adc1_conversion_fail_flag != 0))
+    if(error_times_index != (adc1_overflow_flag + adc1_conversion_fail_flag))
     {
       /* printf flag when error occur */
+      error_times_index = adc1_overflow_flag + adc1_conversion_fail_flag;
       at32_led_on(LED3);
       at32_led_on(LED4);
       printf("error occur\r\n");
+      printf("error_times_index = %d\r\n",error_times_index);
       printf("adc1_overflow_flag = %d\r\n",adc1_overflow_flag);
       printf("adc1_conversion_fail_flag = %d\r\n",adc1_conversion_fail_flag);
     }

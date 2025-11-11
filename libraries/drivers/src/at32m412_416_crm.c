@@ -3,7 +3,8 @@
   * @file     at32m412_416_crm.c
   * @brief    contains all the functions for the crm firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -110,7 +111,7 @@ void crm_hext_bypass(confirm_state new_state)
   *         - CRM_PLL_STABLE_FLAG
   *         - CRM_LEXT_STABLE_FLAG
   *         - CRM_LICK_STABLE_FLAG
-  *         - CRM_PIN_RESET_FLAG
+  *         - CRM_NRST_RESET_FLAG
   *         - CRM_POR_RESET_FLAG
   *         - CRM_SW_RESET_FLAG
   *         - CRM_WDT_RESET_FLAG
@@ -136,6 +137,64 @@ flag_status crm_flag_get(uint32_t flag)
   {
     status = SET;
   }
+  return status;
+}
+
+/**
+  * @brief  get crm interrupt flag status
+  * @param  flag
+  *         this parameter can be one of the following values:
+  *         - CRM_LICK_READY_INT_FLAG
+  *         - CRM_LEXT_READY_INT_FLAG
+  *         - CRM_HICK_READY_INT_FLAG
+  *         - CRM_HEXT_READY_INT_FLAG
+  *         - CRM_PLL_READY_INT_FLAG
+  *         - CRM_CLOCK_FAILURE_INT_FLAG
+  * @retval flag_status (SET or RESET)
+  */
+flag_status crm_interrupt_flag_get(uint32_t flag)
+{
+  flag_status status = RESET;
+  switch(flag)
+  {
+    case CRM_LICK_READY_INT_FLAG:
+      if(CRM->clkint_bit.lickstblf && CRM->clkint_bit.lickstblien)
+      {
+        status = SET;
+      }
+      break;
+    case CRM_LEXT_READY_INT_FLAG:
+      if(CRM->clkint_bit.lextstblf && CRM->clkint_bit.lextstblien)
+      {
+        status = SET;
+      }
+      break;
+    case CRM_HICK_READY_INT_FLAG:
+      if(CRM->clkint_bit.hickstblf && CRM->clkint_bit.hickstblien)
+      {
+        status = SET;
+      }
+      break;
+    case CRM_HEXT_READY_INT_FLAG:
+      if(CRM->clkint_bit.hextstblf && CRM->clkint_bit.hextstblien)
+      {
+        status = SET;
+      }
+      break;
+    case CRM_PLL_READY_INT_FLAG:
+      if(CRM->clkint_bit.pllstblf && CRM->clkint_bit.pllstblien)
+      {
+        status = SET;
+      }
+      break;
+    case CRM_CLOCK_FAILURE_INT_FLAG:
+      if(CRM->clkint_bit.cfdf && CRM->ctrl_bit.cfden)
+      {
+        status = SET;
+      }
+      break;
+  }
+
   return status;
 }
 
@@ -318,7 +377,7 @@ void crm_clock_source_enable(crm_clock_source_type source, confirm_state new_sta
   * @param  flag
   *         this parameter can be one of the following values:
   *         reset flag:
-  *         - CRM_PIN_RESET_FLAG
+  *         - CRM_NRST_RESET_FLAG
   *         - CRM_POR_RESET_FLAG
   *         - CRM_SW_RESET_FLAG
   *         - CRM_WDT_RESET_FLAG
@@ -631,13 +690,13 @@ void crm_can_clock_select(crm_can_type can_index, crm_can_clock_source_type valu
   switch(can_index)
   {
     case CRM_CAN1:
-      CRM->piclks_bit.can1sel = value;
+      CRM->piclks_bit.can1_clksel = value;
       break;
   }
 }
 
 /** 
-  * @brief  can multi clock source select
+  * @brief  get can clock source
   * @param  can_index
   *         this parameter can be one of the following values:
   *         - CRM_CAN1
@@ -650,7 +709,7 @@ crm_can_clock_source_type crm_can_clock_get(crm_can_type can_index)
   switch(can_index)
   {
     case CRM_CAN1:
-      value = (crm_can_clock_source_type)CRM->piclks_bit.can1sel;
+      value = (crm_can_clock_source_type)CRM->piclks_bit.can1_clksel;
       break;
   }
 
@@ -806,7 +865,7 @@ void crm_clocks_freq_get(crm_clocks_freq_type *clocks_struct)
       pll_ms = CRM->pllcfg_bit.pllms;
       pll_fr = pll_fr_table[CRM->pllcfg_bit.pllfr];
 
-      if (pll_clock_source == CRM_PLL_SOURCE_HICK)
+      if(pll_clock_source == CRM_PLL_SOURCE_HICK)
       {
         /* hick selected as pll clock entry */
         pllrcsfreq = HICK_VALUE;

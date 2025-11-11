@@ -3,7 +3,8 @@
   * @file     at32m412_416_int.c
   * @brief    main interrupt service routines.
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -32,10 +33,6 @@
 /** @addtogroup 416_ADC_use_polling_get_conversion_data
   * @{
   */
-
-extern __IO uint16_t dma_trans_complete_flag;
-extern __IO uint32_t adc1_overflow_flag;
-extern __IO uint32_t adc1_conversion_fail_flag;
 
 /**
   * @brief  this function handles nmi exception.
@@ -132,26 +129,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  this function handles adc1_2 handler.
-  * @param  none
-  * @retval none
-  */
-void ADC1_2_IRQHandler(void)
-{
-  if(adc_interrupt_flag_get(ADC1, ADC_TCF_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_TCF_FLAG);
-    adc1_conversion_fail_flag++;
-  }
-	
-  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
-    adc1_overflow_flag++;
-  }
 }
 
 /**

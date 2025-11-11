@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -173,10 +174,15 @@ void system_clock_recover(void)
   */
 int main(void)
 {
+  crm_clocks_freq_type crm_clocks_freq_struct = {0};
+  
   ertc_clock_config();
   
   /* congfig the system clock */
   system_clock_config();
+  
+  /* get system clock */
+  crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   /* init at start board */
   at32_board_init();
@@ -196,17 +202,6 @@ int main(void)
     /* turn off the led light */
     at32_led_off(LED2);
 
-    /* select system clock source as hick before ldo set */
-    crm_sysclk_switch(CRM_SCLK_HICK);
-
-    /* wait till hick is used as system clock source */
-    while(crm_sysclk_switch_status_get() != CRM_SCLK_HICK)
-    {
-    }
-    
-    /* reduce ldo before enter deepsleep mode */
-    pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V2);
-
     /* congfig the voltage regulator mode */
     pwc_voltage_regulate_set(PWC_REGULATOR_EXTRA_LOW_POWER);
 
@@ -219,12 +214,19 @@ int main(void)
     /* determine if the debugging function is enabled */
     if((DEBUGMCU->ctrl & 0x00000007) != 0x00000000)
     {
-      /* wait 3 LICK cycles to ensure clock stable */
-      delay_us(6);
+      /* wait 3 LICK(maximum 120us) cycles to ensure clock stable */
+      /* when wakeup from deepsleep,system clock source changes to HICK */
+      if(CRM->misc1_bit.hick_to_sclk == TRUE)
+      {
+        /* HICK is 48MHz */
+        delay_us(((120 * 6 * HICK_VALUE) /crm_clocks_freq_struct.sclk_freq) + 1);
+      }
+      else
+      {
+        /* HICK is 8MHz */
+        delay_us(((120 * HICK_VALUE) /crm_clocks_freq_struct.sclk_freq) + 1);
+      }
     }
-
-    /* resume ldo before system clock source enhance */
-    pwc_ldo_output_voltage_set(PWC_LDO_OUTPUT_1V3);
 
     /* congfig the system clock */
     system_clock_recover();

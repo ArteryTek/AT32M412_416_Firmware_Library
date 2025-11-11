@@ -3,7 +3,8 @@
   * @file     at32m412_416_can.c
   * @brief    contains all the functions for the can firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -713,7 +714,7 @@ void can_rxbuf_warning_set(can_type* can_x, uint8_t warning_value)
   * @param  can_x: select the can peripheral.
   *         this parameter can be one of the following values:
   *         CAN1.
-  * @param  warning_value: programmable error warning limit = (warning_value + 1)*8. possible limit values: 8, 16, бн 128. 
+  * @param  warning_value: programmable error warning limit = (warning_value + 1)*8. possible limit values: 8, 16, ... 128. 
   *         this parameter can be 0~15.
   * @retval none
   */
@@ -780,7 +781,7 @@ can_error_type can_kind_error_get(can_type* can_x)
   * @param  can_x: select the can peripheral.
   *         this parameter can be one of the following values:
   *         CAN1.
-  * @retval status of can bus off flag, the returned value can be:SET or RESET.
+  * @retval status of can bus off flag, the returned value can be: SET or RESET.
   */
 flag_status can_busoff_get(can_type* can_x)
 {
@@ -1355,7 +1356,7 @@ void can_interrupt_enable(can_type* can_x, uint32_t can_int, confirm_state new_s
   *         - CAN_WTIE_FLAG  
   *         - CAN_EPASS_FLAG 
   *         - CAN_EWARN_FLAG 
-  * @retval status of can flag, the returned value can be:SET or RESET.
+  * @retval status of can flag, the returned value can be: SET or RESET.
   */
 flag_status can_flag_get(can_type* can_x, uint32_t can_flag)
 {
@@ -1420,7 +1421,7 @@ flag_status can_interrupt_flag_get(can_type* can_x, uint32_t can_flag)
   *         - CAN_EPIF_FLAG  
   *         - CAN_TTIF_FLAG  
   *         - CAN_TEIF_FLAG   
-  *         - CAN_WTIE_FLAG  
+  *         - CAN_WTIF_FLAG  
   *         - CAN_EPASS_FLAG 
   *         - CAN_EWARN_FLAG 
   *         - CAN_ALL_FLAG   

@@ -3,7 +3,8 @@
   * @file     at32m412_416_usart.c
   * @brief    contains all the functions for the usart firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -72,6 +73,9 @@ void usart_reset(usart_type* usart_x)
   *         - USART_DATA_7BITS
   *         - USART_DATA_8BITS
   *         - USART_DATA_9BITS.
+  *         noteï¼?
+  *         - when parity check is disabled, the data bit width is the actual data bit number.
+  *         - when parity check is enabled, the data bit width is the actual data bit number minus 1, and the MSB bit is replaced with the parity bit.
   * @param  stop_bit: stop bits transmitted
   *         this parameter can be one of the following values:
   *         - USART_STOP_1_BIT
@@ -409,7 +413,6 @@ void usart_break_send(usart_type* usart_x)
 
 /**
   * @brief  config the specified usart smartcard guard time.
-  * @note   The guard time bits are not available for UART4, UART5, UART7 or UART8.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
   *         USART1 or USART2.
@@ -423,7 +426,6 @@ void usart_smartcard_guard_time_set(usart_type* usart_x, uint8_t guard_time_val)
 
 /**
   * @brief  config the irda/smartcard division.
-  * @note   the division are not available for UART4, UART5, UART7 or UART8.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
   *         USART1 or USART2.
@@ -437,7 +439,6 @@ void usart_irda_smartcard_division_set(usart_type* usart_x, uint8_t div_val)
 
 /**
   * @brief  enable or disable the usart smart card mode.
-  * @note   the smart card mode are not available for UART4, UART5, UART7 or UART8.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
   *         USART1 or USART2.
@@ -452,7 +453,6 @@ void usart_smartcard_mode_enable(usart_type* usart_x, confirm_state new_state)
 
 /**
   * @brief  enable or disable nack transmission in smartcard mode.
-  * @note   the smart card nack are not available for UART4, UART5, UART7 or UART8.
   * @param  usart_x: select the usart or the uart peripheral.
   *         this parameter can be one of the following values:
   *         USART1 or USART2.
@@ -551,18 +551,18 @@ void usart_hardware_flow_control_set(usart_type* usart_x,usart_hardware_flow_con
   *         USART1 or USART2.
   * @param  flag: specifies the flag to check.
   *         this parameter can be one of the following values:
-  *         - USART_CMDF_FLAG:   character match detection flag  (not available for USART4,USART5,USART6,USART7 and USART8)
+  *         - USART_CMDF_FLAG:   character match detection flag 
   *         - USART_RTODF_FLAG:  receiver time out detection flag
-  *         - USART_CTSCF_FLAG: cts change flag (not available for USART5,USART6,UART7 and UART8)
-  *         - USART_BFF_FLAG:   break frame flag
-  *         - USART_TDBE_FLAG:  transmit data buffer empty flag
-  *         - USART_TDC_FLAG:   transmit data complete flag
-  *         - USART_RDBF_FLAG:  receive data buffer full flag
-  *         - USART_IDLEF_FLAG: idle flag
-  *         - USART_ROERR_FLAG: receiver overflow error flag
-  *         - USART_NERR_FLAG:  noise error flag
-  *         - USART_FERR_FLAG:  framing error flag
-  *         - USART_PERR_FLAG:  parity error flag
+  *         - USART_CTSCF_FLAG:  cts change flag 
+  *         - USART_BFF_FLAG:    break frame flag
+  *         - USART_TDBE_FLAG:   transmit data buffer empty flag
+  *         - USART_TDC_FLAG:    transmit data complete flag
+  *         - USART_RDBF_FLAG:   receive data buffer full flag
+  *         - USART_IDLEF_FLAG:  idle flag
+  *         - USART_ROERR_FLAG:  receiver overflow error flag
+  *         - USART_NERR_FLAG:   noise error flag
+  *         - USART_FERR_FLAG:   framing error flag
+  *         - USART_PERR_FLAG:   parity error flag
   * @retval the new state of usart_flag (SET or RESET).
   */
 flag_status usart_flag_get(usart_type* usart_x, uint32_t flag)
@@ -668,7 +668,7 @@ flag_status usart_interrupt_flag_get(usart_type* usart_x, uint32_t flag)
   *         this parameter can be any combination of the following values:
   *         - USART_CMDF_FLAG:   character match detection flag
   *         - USART_RTODF_FLAG:  receiver time out detection flag
-  *         - USART_CTSCF_FLAG: (not available for USART5,USART6,UART7 and UART8).
+  *         - USART_CTSCF_FLAG:  
   *         - USART_BFF_FLAG:
   *         - USART_TDC_FLAG:
   *         - USART_RDBF_FLAG:

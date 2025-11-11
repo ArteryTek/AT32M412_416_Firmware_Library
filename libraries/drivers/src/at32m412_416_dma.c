@@ -3,7 +3,8 @@
   * @file     at32m412_416_dma.c
   * @brief    contains all the functions for the dma firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -87,7 +88,7 @@ void dma_data_number_set(dma_channel_type *dmax_channely, uint32_t data_number)
 }
 
 /**
-  * @brief  get the number of data to be transferred.
+  * @brief  get number of data from dtcnt register.
   * @param  dmax_channely: 
   *         this parameter can be one of the following values:  
   *         - DMA1_CHANNEL1      
@@ -97,7 +98,7 @@ void dma_data_number_set(dma_channel_type *dmax_channely, uint32_t data_number)
   *         - DMA1_CHANNEL5      
   *         - DMA1_CHANNEL6  
   *         - DMA1_CHANNEL7      
-  * @retval the number value.
+  * @retval the number of data.
   */
 uint16_t dma_data_number_get(dma_channel_type *dmax_channely)
 {

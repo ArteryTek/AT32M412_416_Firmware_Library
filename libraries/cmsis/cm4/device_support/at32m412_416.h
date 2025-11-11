@@ -3,7 +3,8 @@
   * @file     at32m412_416.h
   * @brief    at32m412_416 header file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -153,7 +154,7 @@ extern "C" {
   */
 #define __AT32M412_416_LIBRARY_VERSION_MAJOR    (0x02) /*!< [31:24] major version */
 #define __AT32M412_416_LIBRARY_VERSION_MIDDLE   (0x00) /*!< [23:16] middle version */
-#define __AT32M412_416_LIBRARY_VERSION_MINOR    (0x01) /*!< [15:8]  minor version */
+#define __AT32M412_416_LIBRARY_VERSION_MINOR    (0x02) /*!< [15:8]  minor version */
 #define __AT32M412_416_LIBRARY_VERSION_RC       (0x00) /*!< [7:0]  release candidate */
 #define __AT32M412_416_LIBRARY_VERSION          ((__AT32M412_416_LIBRARY_VERSION_MAJOR << 24)  | \
                                                  (__AT32M412_416_LIBRARY_VERSION_MIDDLE << 16) | \

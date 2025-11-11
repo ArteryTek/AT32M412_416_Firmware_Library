@@ -11,4 +11,4 @@
   the convert data as follow:
   - adccom_ordinary_valuetab[n] ---> (adc2_channel_1<<16) | adc1_channel_2
 
-  for more detailed information. please refer to the application note document AN0180.
+  for more detailed information. please refer to the application note document AN0225.

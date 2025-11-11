@@ -3,7 +3,8 @@
   * @file     at32m412_416_can.h
   * @brief    at32m412_416 can header file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -855,14 +856,13 @@ typedef struct
       __IO uint32_t ide                 : 1; /* [16] */
       __IO uint32_t fdf                 : 1; /* [17] */  
       __IO uint32_t brs                 : 1; /* [18] */
-      __IO uint32_t xlf                 : 1; /* [19] */
+      __IO uint32_t reserved2           : 1; /* [19] */
       __IO uint32_t rmf                 : 1; /* [20] */
-      __IO uint32_t sec                 : 1; /* [21] */
-      __IO uint32_t reserved2           : 2; /* [23:22] */
+      __IO uint32_t reserved3           : 3; /* [23:21] */
       __IO uint32_t koer                : 3; /* [26:24] */
       __IO uint32_t esi                 : 1; /* [27] */
       __IO uint32_t lbf                 : 1; /* [28] */
-      __IO uint32_t reserved3           : 3; /* [31:29] */    
+      __IO uint32_t reserved4           : 3; /* [31:29] */
     } fcfmt_bit;
   };
   
@@ -874,9 +874,7 @@ typedef struct
     __IO uint32_t fctyp;
     struct
     {
-      __IO uint32_t sdt                 : 8; /* [7:0] */
-      __IO uint32_t vcid                : 8; /* [15:8] */
-      __IO uint32_t reserved1           : 8; /* [23:16] */
+      __IO uint32_t reserved1           : 24; /* [23:0] */
       __IO uint32_t handle              : 8; /* [31:24] */    
     } fctyp_bit;
   };
@@ -904,14 +902,13 @@ typedef struct
       __IO uint32_t ide                 : 1; /* [16] */
       __IO uint32_t fdf                 : 1; /* [17] */  
       __IO uint32_t brs                 : 1; /* [18] */
-      __IO uint32_t xlf                 : 1; /* [19] */
+      __IO uint32_t reserved2           : 1; /* [19] */
       __IO uint32_t rmf                 : 1; /* [20] */
-      __IO uint32_t sec                 : 1; /* [21] */
-      __IO uint32_t reserved2           : 2; /* [23:22] */
+      __IO uint32_t reserved3           : 3; /* [23:21] */
       __IO uint32_t koer                : 3; /* [26:24] */
       __IO uint32_t esi                 : 1; /* [27] */
       __IO uint32_t lbf                 : 1; /* [28] */
-      __IO uint32_t reserved3           : 3; /* [31:29] */    
+      __IO uint32_t reserved4           : 3; /* [31:29] */
     } fmfmt_bit;
   };
   
@@ -923,9 +920,7 @@ typedef struct
     __IO uint32_t fmtyp;
     struct
     {
-      __IO uint32_t sdt                 : 8; /* [7:0] */
-      __IO uint32_t vcid                : 8; /* [15:8] */
-      __IO uint32_t reserved1           : 8; /* [23:16] */
+      __IO uint32_t reserved1           : 24; /* [23:0] */
       __IO uint32_t handle              : 8; /* [31:24] */    
     } fmtyp_bit;
   };
@@ -953,14 +948,13 @@ typedef struct
       __IO uint32_t ide                 : 1; /* [16] */
       __IO uint32_t fdf                 : 1; /* [17] */  
       __IO uint32_t brs                 : 1; /* [18] */
-      __IO uint32_t xlf                 : 1; /* [19] */
+      __IO uint32_t reserved2           : 1; /* [19] */
       __IO uint32_t rmf                 : 1; /* [20] */
-      __IO uint32_t sec                 : 1; /* [21] */
-      __IO uint32_t reserved2           : 2; /* [23:22] */
+      __IO uint32_t reserved3           : 3; /* [23:21] */
       __IO uint32_t koer                : 3; /* [26:24] */
       __IO uint32_t esi                 : 1; /* [27] */
       __IO uint32_t lbf                 : 1; /* [28] */
-      __IO uint32_t reserved3           : 3; /* [31:29] */    
+      __IO uint32_t reserved4           : 3; /* [31:29] */    
     } rbfmt_bit;
   };
   
@@ -972,9 +966,7 @@ typedef struct
     __IO uint32_t rbtyp;
     struct
     {
-      __IO uint32_t sdt                 : 8; /* [7:0] */
-      __IO uint32_t vcid                : 8; /* [15:8] */
-      __IO uint32_t reserved1           : 8; /* [23:16] */
+      __IO uint32_t reserved1           : 24; /* [23:0] */
       __IO uint32_t handle              : 8; /* [31:24] */    
     } rbtyp_bit;
   };
@@ -1007,14 +999,13 @@ typedef struct
       __IO uint32_t ide                 : 1; /* [16] */
       __IO uint32_t fdf                 : 1; /* [17] */  
       __IO uint32_t brs                 : 1; /* [18] */
-      __IO uint32_t xlf                 : 1; /* [19] */
+      __IO uint32_t reserved2           : 1; /* [19] */
       __IO uint32_t rmf                 : 1; /* [20] */
-      __IO uint32_t sec                 : 1; /* [21] */
-      __IO uint32_t reserved2           : 2; /* [23:22] */
+      __IO uint32_t reserved3           : 3; /* [23:21] */
       __IO uint32_t koer                : 3; /* [26:24] */
       __IO uint32_t esi                 : 1; /* [27] */
       __IO uint32_t lbf                 : 1; /* [28] */
-      __IO uint32_t reserved3           : 3; /* [31:29] */    
+      __IO uint32_t reserved4           : 3; /* [31:29] */    
     } tbfmt_bit;
   };
   
@@ -1026,9 +1017,7 @@ typedef struct
     __IO uint32_t tbtyp;
     struct
     {
-      __IO uint32_t sdt                 : 8; /* [7:0] */
-      __IO uint32_t vcid                : 8; /* [15:8] */
-      __IO uint32_t reserved1           : 8; /* [23:16] */
+      __IO uint32_t reserved1           : 24; /* [23:0] */
       __IO uint32_t handle              : 8; /* [31:24] */    
     } tbtyp_bit;
   };

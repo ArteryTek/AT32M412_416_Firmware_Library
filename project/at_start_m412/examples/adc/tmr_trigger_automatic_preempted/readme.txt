@@ -10,11 +10,11 @@
   tmr).
   the trigger source is trm1ch1
   the convert data as follow:
-  - adc1_ordinary_valuetab[n][0]  --->  adc1_channel_2
-  - adc1_ordinary_valuetab[n][1]  --->  adc1_channel_4
-  - adc1_ordinary_valuetab[n][2]  --->  adc1_channel_6
-  - adc1_preempt_valuetab[n][0]   --->  adc1_channel_12
-  - adc1_preempt_valuetab[n][1]   --->  adc1_channel_14
-  - adc1_preempt_valuetab[n][2]   --->  adc1_channel_15
+  - adc1_ordinary_valuetab[0]  --->  adc1_channel_2
+  - adc1_ordinary_valuetab[1]  --->  adc1_channel_4
+  - adc1_ordinary_valuetab[2]  --->  adc1_channel_6
+  - adc1_preempt_valuetab[0]   --->  adc1_channel_12
+  - adc1_preempt_valuetab[1]   --->  adc1_channel_14
+  - adc1_preempt_valuetab[2]   --->  adc1_channel_15
 
-  for more detailed information. please refer to the application note document AN0180.
+  for more detailed information. please refer to the application note document AN0225.

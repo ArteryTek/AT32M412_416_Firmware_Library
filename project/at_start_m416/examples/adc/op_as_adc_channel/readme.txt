@@ -14,4 +14,4 @@
   - adc1_ordinary_valuetab[2] ---> op3(pb0)
   - adc1_ordinary_valuetab[3] ---> op3(pb13)
 
-  for more detailed information. please refer to the application note document AN0180.
+  for more detailed information. please refer to the application note document AN0225.

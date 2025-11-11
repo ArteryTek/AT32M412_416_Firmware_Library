@@ -3,7 +3,8 @@
   * @file     at32m412_416_int.c
   * @brief    main interrupt service routines.
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -32,14 +33,6 @@
 /** @addtogroup 412_ADC_combine_ordinary_smlt_tmr1trgout2_dma1
   * @{
   */
-
-extern __IO uint32_t dma1_trans_complete_flag;
-extern __IO uint32_t adc1_overflow_flag;
-extern __IO uint32_t adc2_overflow_flag;
-extern __IO uint32_t adc1_conversion_fail_flag;
-extern __IO uint32_t adc2_conversion_fail_flag;
-
-extern void adc_convert_recovery_process(void);
 
 /**
   * @brief  this function handles nmi exception.
@@ -136,64 +129,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  this function handles dma1_channel1 handler.
-  * @param  none
-  * @retval none
-  */
-void DMA1_Channel1_IRQHandler(void)
-{
-  if(dma_interrupt_flag_get(DMA1_FDT1_FLAG) != RESET)
-  {
-    dma_flag_clear(DMA1_FDT1_FLAG);
-    dma1_trans_complete_flag = 1;
-  }
-}
-
-/**
-  * @brief  this function handles adc1_2 handler.
-  * @param  none
-  * @retval none
-  */
-void ADC1_2_IRQHandler(void)
-{
-  if(adc_interrupt_flag_get(ADC1, ADC_TCF_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_TCF_FLAG);
-    adc1_conversion_fail_flag++;
-		
-    /* convert fail recovery process,ensure data accuracy */
-    adc_convert_recovery_process();
-  }
-	
-  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
-    adc1_overflow_flag++;
-		
-    /* overflow recovery process,ensure data accuracy */
-    adc_convert_recovery_process();
-  }
-	
-  if(adc_interrupt_flag_get(ADC2, ADC_TCF_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC2, ADC_TCF_FLAG);
-    adc2_conversion_fail_flag++;
-		
-    /* convert fail recovery process,ensure data accuracy */
-    adc_convert_recovery_process();
-  }
-	
-  if(adc_interrupt_flag_get(ADC2, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC2, ADC_OCCO_FLAG);
-    adc2_overflow_flag++;
-		
-    /* overflow recovery process,ensure data accuracy */
-    adc_convert_recovery_process();
-  }
 }
 
 /**

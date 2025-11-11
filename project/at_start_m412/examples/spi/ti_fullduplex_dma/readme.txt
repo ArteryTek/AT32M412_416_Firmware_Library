@@ -8,7 +8,7 @@
   this demo is based on the at-start board, in this demo, shows how to use
   fullduplex mode transfer data by dma mode in ti mode.
   the pins connection as follow:
-  - spi2                     spi3 
+  - spi2                     spi1 
     pb12(cs)        <--->     pa4(cs)
     pb13(sck)       <--->     pa5(sck)
     pb14(miso)      <--->     pa6(miso)

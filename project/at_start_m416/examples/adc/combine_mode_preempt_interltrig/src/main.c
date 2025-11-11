@@ -3,7 +3,8 @@
   * @file     main.c
   * @brief    main program
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -33,17 +34,17 @@
   * @{
   */
 
-__IO uint16_t adc1_preempt_valuetab[2][3] = {0};
-__IO uint16_t adc2_preempt_valuetab[2][3] = {0};
+__IO uint16_t adc1_preempt_valuetab[3] = {0};
+__IO uint16_t adc2_preempt_valuetab[3] = {0};
 __IO uint16_t adc1_preempt_conversion_count = 0;
 __IO uint16_t adc2_preempt_conversion_count = 0;
+__IO uint32_t adc1_preempt_conversion_times_index = 0;
+__IO uint32_t adc2_preempt_conversion_times_index = 0;
 __IO uint32_t adc1_overflow_flag = 0;
 __IO uint32_t adc2_overflow_flag = 0;
 __IO uint32_t adc1_conversion_fail_flag = 0;
 __IO uint32_t adc2_conversion_fail_flag = 0;
-
-static void gpio_config(void);
-static void adc_config(void);
+__IO uint32_t error_times_index = 0;
 
 /**
   * @brief  gpio configuration.
@@ -74,6 +75,7 @@ static void adc_config(void)
   adc_base_config_type adc_base_struct;
   crm_periph_clock_enable(CRM_ADC1_PERIPH_CLOCK, TRUE);
   crm_periph_clock_enable(CRM_ADC2_PERIPH_CLOCK, TRUE);
+  adc_reset();
   nvic_irq_enable(ADC1_2_IRQn, 0, 0);
 
   adc_common_default_para_init(&adc_common_struct);
@@ -114,7 +116,7 @@ static void adc_config(void)
 
   /* config dma request repeat,it's not useful when common dma mode is use */
   adc_dma_request_repeat_enable(ADC1, FALSE);
-	
+
 	/* config preempt channel */
   adc_preempt_channel_length_set(ADC1, 3);
   adc_preempt_channel_set(ADC1, ADC_CHANNEL_2, 1, ADC_SAMPLETIME_41_5);
@@ -132,19 +134,19 @@ static void adc_config(void)
 
   /* enable adc overflow interrupt */
   adc_interrupt_enable(ADC1, ADC_OCCO_INT, TRUE);
-	
+
   /* enable adc trigger convert fail interrupt */
   adc_interrupt_enable(ADC1, ADC_TCF_INT, TRUE);
-	
+
   /* enable adc trigger conversion fail auto conversion abort */
   adc_convert_fail_auto_abort_enable(ADC1, TRUE);
-	
+
   adc_base_config(ADC2, &adc_base_struct);
   adc_resolution_set(ADC2, ADC_RESOLUTION_12B);
   adc_ordinary_conversion_trigger_set(ADC2, ADC_ORDINARY_TRIG_TMR1CH1, ADC_ORDINARY_TRIG_EDGE_NONE);
   adc_dma_mode_enable(ADC2, FALSE);
   adc_dma_request_repeat_enable(ADC2, FALSE);
-	adc_preempt_channel_length_set(ADC2, 3);
+  adc_preempt_channel_length_set(ADC2, 3);
   adc_preempt_channel_set(ADC2, ADC_CHANNEL_1, 1, ADC_SAMPLETIME_41_5);
   adc_preempt_channel_set(ADC2, ADC_CHANNEL_3, 2, ADC_SAMPLETIME_41_5);
   adc_preempt_channel_set(ADC2, ADC_CHANNEL_5, 3, ADC_SAMPLETIME_41_5);
@@ -184,23 +186,85 @@ static void adc_config(void)
 void adc_convert_recovery_process(void)
 {
   uint32_t recovery_index = 0;
-	
+
   /* disable adc */
   adc_enable(ADC1, FALSE);
   adc_enable(ADC2, FALSE);
-	
+
   /* record adc mode configuration */
-  recovery_index = ADCCOM->cctrl & (0x1F << 0);
-	
+  recovery_index = adc_combine_mode_get();
+
   /* clear adc mode configuration */
-  ADCCOM->cctrl &= (uint32_t)~(0x1F << 0);
-	
+  adc_combine_mode_set(ADC_INDEPENDENT_MODE);
+
   /* recovery adc mode configuration */
-  ADCCOM->cctrl |= recovery_index;
-	
+  adc_combine_mode_set((adc_combine_mode_type)recovery_index);
+
   /* enable adc to detection trigger */
   adc_enable(ADC1, TRUE);
   adc_enable(ADC2, TRUE);
+}
+
+/**
+  * @brief  this function handles adc1_2 handler.
+  * @param  none
+  * @retval none
+  */
+void ADC1_2_IRQHandler(void)
+{
+  if(adc_interrupt_flag_get(ADC1, ADC_TCF_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_TCF_FLAG);
+    adc1_conversion_fail_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_convert_recovery_process();
+  }
+
+  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
+    adc1_overflow_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_convert_recovery_process();
+  }
+
+  if(adc_interrupt_flag_get(ADC2, ADC_TCF_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC2, ADC_TCF_FLAG);
+    adc2_conversion_fail_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_convert_recovery_process();
+  }
+
+  if(adc_interrupt_flag_get(ADC2, ADC_OCCO_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC2, ADC_OCCO_FLAG);
+    adc2_overflow_flag++;
+
+    /* to avoid data wrong,it is recommended to add the following recovery code */
+    adc_convert_recovery_process();
+  }
+
+	if(adc_interrupt_flag_get(ADC1, ADC_PCCE_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_PCCE_FLAG);
+    adc1_preempt_valuetab[0] = adc_preempt_conversion_data_get(ADC1, ADC_PREEMPT_CHANNEL_1);
+    adc1_preempt_valuetab[1] = adc_preempt_conversion_data_get(ADC1, ADC_PREEMPT_CHANNEL_2);
+    adc1_preempt_valuetab[2] = adc_preempt_conversion_data_get(ADC1, ADC_PREEMPT_CHANNEL_3);
+    adc1_preempt_conversion_count++;
+  }
+
+  if(adc_interrupt_flag_get(ADC2, ADC_PCCE_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC2, ADC_PCCE_FLAG);
+    adc2_preempt_valuetab[0] = adc_preempt_conversion_data_get(ADC2, ADC_PREEMPT_CHANNEL_1);
+    adc2_preempt_valuetab[1] = adc_preempt_conversion_data_get(ADC2, ADC_PREEMPT_CHANNEL_2);
+    adc2_preempt_valuetab[2] = adc_preempt_conversion_data_get(ADC2, ADC_PREEMPT_CHANNEL_3);
+    adc2_preempt_conversion_count++;
+  }
 }
 
 /**
@@ -210,8 +274,6 @@ void adc_convert_recovery_process(void)
   */
 int main(void)
 {
-  __IO uint32_t index1 = 0;
-  __IO uint32_t index2 = 0;
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   /* config the system clock */
@@ -226,44 +288,45 @@ int main(void)
   gpio_config();
   adc_config();
   printf("combine_mode_preempt_interltrig \r\n");
-  /* adc1 software trigger start conversion */
-  for(index1 = 0; index1 < 4; index1++)
+  while(1)
   {
     adc_preempt_software_trigger_enable(ADC1, TRUE);
     delay_sec(1);
-  }
-  if((adc1_preempt_conversion_count != 2) || (adc2_preempt_conversion_count != 2) || (adc1_overflow_flag != 0) || \
-		(adc2_overflow_flag != 0) || (adc1_conversion_fail_flag != 0) || (adc2_conversion_fail_flag != 0))
-  {
-    /* printf flag when error occur */
-    at32_led_on(LED3);
-    at32_led_on(LED4);
-    printf("error occur\r\n");
-		printf("adc1_overflow_flag = %d\r\n",adc1_overflow_flag);
-    printf("adc2_overflow_flag = %d\r\n",adc2_overflow_flag);
-    printf("adc1_conversion_fail_flag = %d\r\n",adc1_conversion_fail_flag);
-    printf("adc2_conversion_fail_flag = %d\r\n",adc2_conversion_fail_flag);
-    printf("adc1_preempt_conversion_count = %d\r\n",adc1_preempt_conversion_count);
-    printf("adc2_preempt_conversion_count = %d\r\n",adc2_preempt_conversion_count);
-  }
-  else
-  {
-    /* printf data when conversion end without error */
-    printf("conversion end without error\r\n");
-    for(index2 = 0; index2 < 2; index2++)
+    at32_led_toggle(LED2);
+    if(adc1_preempt_conversion_times_index != adc1_preempt_conversion_count)
     {
-      printf("adc1_preempt_valuetab[%d][0] = 0x%x\r\n", index2, adc1_preempt_valuetab[index2][0]);
-      printf("adc1_preempt_valuetab[%d][1] = 0x%x\r\n", index2, adc1_preempt_valuetab[index2][1]);
-      printf("adc1_preempt_valuetab[%d][2] = 0x%x\r\n", index2, adc1_preempt_valuetab[index2][2]);
-      printf("adc2_preempt_valuetab[%d][0] = 0x%x\r\n", index2, adc2_preempt_valuetab[index2][0]);
-      printf("adc2_preempt_valuetab[%d][1] = 0x%x\r\n", index2, adc2_preempt_valuetab[index2][1]);
-      printf("adc2_preempt_valuetab[%d][2] = 0x%x\r\n", index2, adc2_preempt_valuetab[index2][2]);
+      /* printf data when conversion end without error */
+      adc1_preempt_conversion_times_index = adc1_preempt_conversion_count;
+      printf("adc1_preempt_conversion_times_index = %d\r\n",adc1_preempt_conversion_times_index);
+      printf("adc1_preempt_valuetab[0] = 0x%x\r\n", adc1_preempt_valuetab[0]);
+      printf("adc1_preempt_valuetab[1] = 0x%x\r\n", adc1_preempt_valuetab[1]);
+      printf("adc1_preempt_valuetab[2] = 0x%x\r\n", adc1_preempt_valuetab[2]);
       printf("\r\n");
     }
-  }
-  at32_led_on(LED2);
-  while(1)
-  {
+    if(adc2_preempt_conversion_times_index != adc2_preempt_conversion_count)
+    {
+      /* printf data when conversion end without error */
+      adc2_preempt_conversion_times_index = adc2_preempt_conversion_count;
+      printf("adc2_preempt_conversion_times_index = %d\r\n",adc2_preempt_conversion_times_index);
+      printf("adc2_preempt_valuetab[0] = 0x%x\r\n", adc2_preempt_valuetab[0]);
+      printf("adc2_preempt_valuetab[1] = 0x%x\r\n", adc2_preempt_valuetab[1]);
+      printf("adc2_preempt_valuetab[2] = 0x%x\r\n", adc2_preempt_valuetab[2]);
+      printf("\r\n");
+    }
+    if(error_times_index != (adc1_overflow_flag + adc2_overflow_flag + adc1_conversion_fail_flag + adc2_conversion_fail_flag))
+    {
+      /* printf flag when error occur */
+      error_times_index = adc1_overflow_flag + adc2_overflow_flag + adc1_conversion_fail_flag + adc2_conversion_fail_flag;
+      at32_led_on(LED3);
+      at32_led_on(LED4);
+      printf("error occur\r\n");
+      printf("error_times_index = %d\r\n",error_times_index);
+      printf("adc1_overflow_flag = %d\r\n",adc1_overflow_flag);
+      printf("adc2_overflow_flag = %d\r\n",adc2_overflow_flag);
+      printf("adc1_conversion_fail_flag = %d\r\n",adc1_conversion_fail_flag);
+      printf("adc2_conversion_fail_flag = %d\r\n",adc2_conversion_fail_flag);
+      printf("\r\n");
+    }
   }
 }
 

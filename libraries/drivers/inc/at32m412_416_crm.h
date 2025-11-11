@@ -3,7 +3,8 @@
   * @file     at32m412_416_crm.h
   * @brief    at32m412_416 crm header file
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to 
   * download from Artery official website is the copyrighted work of Artery. 
@@ -854,7 +855,7 @@ typedef struct
     struct
     {
       __IO uint32_t reserved1            : 24;/* [23:0] */
-      __IO uint32_t can1sel              : 2; /* [25:24] */
+      __IO uint32_t can1_clksel          : 2; /* [25:24] */
       __IO uint32_t reserved2            : 6; /* [31:26] */
     } piclks_bit;
   };
@@ -968,6 +969,7 @@ void crm_reset(void);
 void crm_lext_bypass(confirm_state new_state);
 void crm_hext_bypass(confirm_state new_state);
 flag_status crm_flag_get(uint32_t flag);
+flag_status crm_interrupt_flag_get(uint32_t flag);
 error_status crm_hext_stable_wait(void);
 void crm_hick_clock_trimming_set(uint8_t trim_value);
 void crm_hick_clock_calibration_set(uint8_t cali_value);

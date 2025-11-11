@@ -3,7 +3,8 @@
   * @file     at32m412_416_int.c
   * @brief    main interrupt service routines.
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -32,11 +33,6 @@
 /** @addtogroup 412_ADC_use_independent_register_get_ordinary_data
   * @{
   */
-
-extern __IO uint16_t adc1_ordinary_valuetab[3];
-extern __IO uint16_t adc1_ordinary_conversion_flag;
-extern __IO uint32_t adc1_overflow_flag;
-extern __IO uint32_t adc1_conversion_fail_flag;
 
 /**
   * @brief  this function handles nmi exception.
@@ -133,33 +129,6 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-}
-
-/**
-  * @brief  this function handles adc1_2 handler.
-  * @param  none
-  * @retval none
-  */
-void ADC1_2_IRQHandler(void)
-{
-  if(adc_interrupt_flag_get(ADC1, ADC_TCF_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_TCF_FLAG);
-    adc1_conversion_fail_flag++;
-  }
-  if(adc_interrupt_flag_get(ADC1, ADC_OCCO_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_OCCO_FLAG);
-    adc1_overflow_flag++;
-  }
-  if(adc_interrupt_flag_get(ADC1, ADC_OCCE_FLAG) != RESET)
-  {
-    adc_flag_clear(ADC1, ADC_OCCE_FLAG);
-    adc1_ordinary_conversion_flag++;
-    adc1_ordinary_valuetab[0] = adc_common_ordinary_data_get(ADC1, 1);
-    adc1_ordinary_valuetab[1] = adc_common_ordinary_data_get(ADC1, 2);
-    adc1_ordinary_valuetab[2] = adc_common_ordinary_data_get(ADC1, 3);
-  }
 }
 
 /**

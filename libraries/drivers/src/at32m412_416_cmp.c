@@ -3,7 +3,8 @@
   * @file     at32m412_416_cmp.c
   * @brief    contains all the functions for the gpio firmware library
   **************************************************************************
-  *                       Copyright notice & Disclaimer
+  *
+  * Copyright (c) 2025, Artery Technology, All rights reserved.
   *
   * The software Board Support Package (BSP) that is made available to
   * download from Artery official website is the copyrighted work of Artery.
@@ -177,8 +178,8 @@ void cmp_filter_config(cmp_sel_type cmp_sel, uint16_t high_pulse_cnt, uint16_t l
       CMP->cmp1_g_filter_en_bit.gfe = FALSE;
 
       /* reset the h_pulse_cnt and l_pulse_cnt bits */
-      CMP->cmp1_low_pulse_bit.l_pulse_cnt = low_pulse_cnt;
-      CMP->cmp1_high_pulse_bit.h_pulse_cnt = high_pulse_cnt;
+      CMP->cmp1_low_pulse_bit.l_pulse_cnt = 0;
+      CMP->cmp1_high_pulse_bit.h_pulse_cnt = 0;
 	  }
   }
   else
@@ -198,8 +199,8 @@ void cmp_filter_config(cmp_sel_type cmp_sel, uint16_t high_pulse_cnt, uint16_t l
       CMP->cmp2_g_filter_en_bit.gfe = FALSE;
 
       /* reset the h_pulse_cnt and l_pulse_cnt bits */
-      CMP->cmp2_low_pulse_bit.l_pulse_cnt = low_pulse_cnt;
-      CMP->cmp2_high_pulse_bit.h_pulse_cnt = high_pulse_cnt;
+      CMP->cmp2_low_pulse_bit.l_pulse_cnt = 0;
+      CMP->cmp2_high_pulse_bit.h_pulse_cnt = 0;
 	  }
   }
 }
