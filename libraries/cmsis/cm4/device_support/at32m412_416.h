@@ -56,21 +56,24 @@ extern "C" {
     !defined (AT32M416EBP7)   && !defined (AT32M416E8P7)   && !defined (AT32M412CBT7)   && \
     !defined (AT32M412C8T7)   && !defined (AT32M412KBT7)   && !defined (AT32M412K8T7)   && \
     !defined (AT32M412KBU7_4) && !defined (AT32M412K8U7_4) && !defined (AT32M412EBP7)   && \
-    !defined (AT32M412E8P7) 
+    !defined (AT32M412E8P7)   && !defined (AT32M412CBU7)   && !defined (AT32M412C8U7)   && \
+    !defined (AT32M416CBU7)   && !defined (AT32M416C8U7)
 
     #error "Please select first the target device used in your application (in at32m412_416.h file)"
 #endif
 
 #if defined (AT32M416CBT7)  || defined (AT32M416C8T7)   || defined (AT32M416KBT7)   || \
     defined (AT32M416K8T7)  || defined (AT32M416KBU7_4) || defined (AT32M416K8U7_4) || \
-    defined (AT32M416EBP7)  || defined (AT32M416E8P7)
+    defined (AT32M416EBP7)  || defined (AT32M416E8P7)   || defined (AT32M416CBU7)   || \
+    defined (AT32M416C8U7)
 
     #define AT32M416xx
 #endif
 
 #if defined (AT32M412CBT7)  || defined (AT32M412C8T7)   || defined (AT32M412KBT7)   || \
     defined (AT32M412K8T7)  || defined (AT32M412KBU7_4) || defined (AT32M412K8U7_4) || \
-    defined (AT32M412EBP7)  || defined (AT32M412E8P7)
+    defined (AT32M412EBP7)  || defined (AT32M412E8P7)   || defined (AT32M412CBU7)   || \
+    defined (AT32M412C8U7)
 
     #define AT32M412xx
 #endif
@@ -78,7 +81,8 @@ extern "C" {
 /**
   * define with package
   */
-#if defined (AT32M416CBT7)  || defined (AT32M416C8T7)
+#if defined (AT32M416CBT7)  || defined (AT32M416C8T7)  || defined (AT32M416CBU7)   || \
+    defined (AT32M416C8U7)
 
     #define AT32M416Cx
 #endif
@@ -93,7 +97,8 @@ extern "C" {
     #define AT32M416Ex
 #endif
 
-#if defined (AT32M412CBT7)  || defined (AT32M412C8T7)
+#if defined (AT32M412CBT7)  || defined (AT32M412C8T7)  || defined (AT32M412CBU7)   || \
+    defined (AT32M412C8U7)
 
     #define AT32M412Cx
 #endif
@@ -112,25 +117,25 @@ extern "C" {
   * define with memory density
   */
 #if defined (AT32M416CBT7)  || defined (AT32M416KBT7)  || defined (AT32M416KBU7_4) || \
-    defined (AT32M416EBP7)
+    defined (AT32M416EBP7)  || defined (AT32M416CBU7)
 
     #define AT32M416xB
 #endif
 
 #if defined (AT32M416C8T7)  || defined (AT32M416K8T7)  || defined (AT32M416K8U7_4) || \
-    defined (AT32M416E8P7)
+    defined (AT32M416E8P7)  || defined (AT32M416C8U7)
 
     #define AT32M416x8
 #endif
 
 #if defined (AT32M412CBT7)  || defined (AT32M412KBT7)  || defined (AT32M412KBU7_4) || \
-    defined (AT32M412EBP7)
+    defined (AT32M412EBP7)  || defined (AT32M412CBU7)
 
     #define AT32M412xB
 #endif
 
 #if defined (AT32M412C8T7)  || defined (AT32M412K8T7)  || defined (AT32M412K8U7_4) || \
-    defined (AT32M412E8P7)
+    defined (AT32M412E8P7)  || defined (AT32M412C8U7)
 
     #define AT32M412x8
 #endif
@@ -154,7 +159,7 @@ extern "C" {
   */
 #define __AT32M412_416_LIBRARY_VERSION_MAJOR    (0x02) /*!< [31:24] major version */
 #define __AT32M412_416_LIBRARY_VERSION_MIDDLE   (0x00) /*!< [23:16] middle version */
-#define __AT32M412_416_LIBRARY_VERSION_MINOR    (0x03) /*!< [15:8]  minor version */
+#define __AT32M412_416_LIBRARY_VERSION_MINOR    (0x04) /*!< [15:8]  minor version */
 #define __AT32M412_416_LIBRARY_VERSION_RC       (0x00) /*!< [7:0]  release candidate */
 #define __AT32M412_416_LIBRARY_VERSION          ((__AT32M412_416_LIBRARY_VERSION_MAJOR << 24)  | \
                                                  (__AT32M412_416_LIBRARY_VERSION_MIDDLE << 16) | \
